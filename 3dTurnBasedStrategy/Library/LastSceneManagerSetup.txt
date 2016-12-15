@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/8x8MapFlat.unity
+  isLoaded: 1
+  isActive: 1
