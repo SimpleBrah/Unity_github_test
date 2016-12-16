@@ -9,6 +9,7 @@ public class worker extends unit{
     
     public var hqPrefab : hq;
     public var tookAction : boolean;
+    public var hpSlider : GameObject;
     
 
     function Start () {
@@ -21,11 +22,21 @@ public class worker extends unit{
     }
 
     function Update () {
-        if(hp<0){
+        if(hp<1){
             playerManagerScript.playerList[ownerID-1].unitList.Remove(this);
             playerManagerScript.playerList[ownerID-1].renewIDs();
             Destroy(this.gameObject);
         }
+        //for every power up
+        for(pu in GameObject.Find("mapManager").GetComponent(mapManager).powerUpList){
+            if(pu.transform.position==transform.position){
+                GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].resources+=50;
+                Destroy(pu);
+                GameObject.Find("mapManager").GetComponent(mapManager).powerUpList.Remove(pu);
+            }
+        }
+        //display hp
+        hpSlider.GetComponent(Slider).value=hp;
     }
 
     public function moveOrAttack(direction : Vector3){
@@ -57,15 +68,6 @@ public class worker extends unit{
                         playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
                     }
                 }
-            }
-        }
-
-        //for every power up
-        for(pu in GameObject.Find("mapManager").GetComponent(mapManager).powerUpList){
-            if(pu.transform.position==transform.position){
-                GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].resources+=50;
-                Destroy(pu);
-                GameObject.Find("mapManager").GetComponent(mapManager).powerUpList.Remove(pu);
             }
         }
 
