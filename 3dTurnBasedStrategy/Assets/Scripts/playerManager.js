@@ -46,7 +46,7 @@ public class playerManager extends MonoBehaviour{
             playerList[i].ID=i+1;
             playerList[i].startingPosition=GameObject.Find("mapManager").GetComponent(mapManager).startingPosition[i].transform;
             playerList[i].resources=350;
-            GameObject.Find("HUD/player"+(i+1)+"Resources").GetComponent.<Text>().text="Resource: "+playerList[i].resources;//resourcesText[i].text="Resource: "+playerList[i].resources;
+            GameObject.Find("HUD/RawImage/player"+(i+1)+"Resources").GetComponent.<Text>().text=""+playerList[i].resources;//resourcesText[i].text="Resource: "+playerList[i].resources;
         }
         //turn setup
         turn=1;
@@ -62,7 +62,7 @@ public class playerManager extends MonoBehaviour{
         }
         //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
         //UI update
-        GameObject.Find("HUD/player"+subTurn+"Resources").GetComponent.<Text>().text="Resource: "+playerList[subTurn-1].resources;
+        GameObject.Find("HUD/RawImage/player"+subTurn+"Resources").GetComponent.<Text>().text=""+playerList[subTurn-1].resources;
         GameObject.Find("HUD/subTurn").GetComponent.<Text>().text="Turn: "+subTurn;
         //Material update (this should not be in update?)
         var objects = GameObject.FindGameObjectsWithTag("colored_parts");
