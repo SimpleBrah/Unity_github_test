@@ -110,7 +110,7 @@ public class worker extends unit{
                 }
             }
         }
-        if(targetValid){
+        if(targetValid && playerManagerScript.playerList[ownerID-1].resources>=400){
             playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(hqPrefab,transform.position+direction,hqPrefab.transform.rotation));
             playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
             playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;

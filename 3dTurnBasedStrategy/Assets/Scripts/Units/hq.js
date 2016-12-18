@@ -70,7 +70,7 @@ public class hq extends unit{
         }
     
         if(targetValid==true){
-            if(mode=="worker"){
+            if(mode=="worker" && playerManagerScript.playerList[ownerID-1].resources>=50){
                 playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(workerPrefab,transform.position+direction,workerPrefab.transform.rotation));
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
@@ -80,7 +80,7 @@ public class hq extends unit{
                 buildingMode=false;
                 cooldown=5;
                 playerManagerScript.playerList[ownerID-1].resources-=50;
-            }else if(mode=="rocketLauncher"){
+            }else if(mode=="rocketLauncher" && playerManagerScript.playerList[ownerID-1].resources>=100){
                 playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(rocketLauncherPrefab,transform.position+direction,rocketLauncherPrefab.transform.rotation));
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
