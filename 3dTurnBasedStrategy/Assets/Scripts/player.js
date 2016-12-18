@@ -23,7 +23,7 @@ public class player extends MonoBehaviour{
         unitList[0].ownerID=ID;
         unitList[0].ID=0;
         unitList[0].hp=100;
-        unitList[0].buildingMode=false;
+        unitList[0].inputMode="move";
         unitList[0].tookAction=false;
         //setup selector
         if(ID==1){
@@ -37,8 +37,28 @@ public class player extends MonoBehaviour{
     function Update () {
         //if its my turn check for events
         if(playerManagerScript.subTurn==ID){
-            if(playerManagerScript.selector.buildingMode==true){
-                //Build the worker in given direction
+            if(Input.GetKeyDown(KeyCode.Tab) && unitList.Count>1){
+                playerManagerScript.selectorNext();
+            }
+            else if(Input.GetKeyDown(KeyCode.M)){
+                playerManagerScript.selector.inputMode="move";
+            }
+            else if(Input.GetKeyDown(KeyCode.B)){
+                playerManagerScript.selector.inputMode="build";
+            }
+            else if(Input.GetKeyDown(KeyCode.A) && (playerManagerScript.selector instanceof rocketLauncherMech)){
+                playerManagerScript.selector.inputMode="attack";
+            }
+            else if(playerManagerScript.selector.inputMode=="move" && playerManagerScript.selector.tookAction==false && inputVector()!=Vector3(0,0,0)){
+                playerManagerScript.selector.moveOrAttack(inputVector());
+            }else if(playerManagerScript.selector.inputMode=="build" && playerManagerScript.selector.tookAction==false  && inputVector()!=Vector3(0,0,0)){
+                playerManagerScript.selector.build(inputVector());
+            }
+            else if(playerManagerScript.selector.inputMode=="attack"){
+                //not done here
+            }
+            //inputMode build
+            /*if(playerManagerScript.selector.inputMode=="build"){
                 if(Input.GetKeyDown(KeyCode.W)){
                     playerManagerScript.selector.build(Vector3(0,0,1));
                 }
@@ -51,17 +71,14 @@ public class player extends MonoBehaviour{
                 else if(Input.GetKeyDown(KeyCode.D)){
                     playerManagerScript.selector.build(Vector3(1,0,0));
                 }
-                    //Exit build mode
                 else if(Input.GetKeyDown(KeyCode.B)){
-                    playerManagerScript.selector.buildingMode=false;
+                    playerManagerScript.selector.inputMode="move";
                 }
-                    //select next unit
                 else if(Input.GetKeyDown(KeyCode.Tab) && unitList.Count>1){
                     playerManagerScript.selectorNext();
                 }
-            }//the selected unit is in movement mode
-            else{
-                //Move in the given direction if we didnt take an action
+            }//inputMode move
+            else if(playerManagerScript.selector.inputMode=="move"){
                 if(Input.GetKeyDown(KeyCode.W) && playerManagerScript.selector.tookAction==false){
                     playerManagerScript.selector.moveOrAttack(Vector3(0,0,1));
                 }
@@ -74,133 +91,46 @@ public class player extends MonoBehaviour{
                 else if(Input.GetKeyDown(KeyCode.D) && playerManagerScript.selector.tookAction==false){
                     playerManagerScript.selector.moveOrAttack(Vector3(1,0,0));
                 }
-                //Open up building mode
                 if(Input.GetKeyDown(KeyCode.B)){
                     if(resources>=50){
-                        playerManagerScript.selector.buildingMode=true;
+                        playerManagerScript.selector.inputMode="build";
                     }else{
                         GameObject.Find("helpMessage").GetComponent.<Text>().text="You need at least 50 resources to train a worker";
                         playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
                     }
                 }
-                    //select the next unit
                 else if(Input.GetKeyDown(KeyCode.Tab) && unitList.Count>1){
                     playerManagerScript.selectorNext();
                 }
-            }
-            //if(playerManagerScript.selector instanceof hq)
-            //    buildingEvent(playerManagerScript.selector as hq);
-            //else if(playerManagerScript.selector instanceof worker)
-            //    workerEvent(playerManagerScript.selector as worker);
+            }else if(playerManagerScript.selector.inputMode=="attack"){
+
+            }*/
         }
     }
 
-    /*function buildingEvent(unit : hq){
-        if(unit.buildingMode==true){
-            //Build the worker in given direction
-            if(Input.GetKeyDown(KeyCode.W)){
-                unit.build(Vector3(0,0,1));
-            }
-            else if(Input.GetKeyDown(KeyCode.S)){
-                unit.build(Vector3(0,0,-1));
-            }
-            else if(Input.GetKeyDown(KeyCode.A)){
-                unit.build(Vector3(-1,0,0));
-            }
-            else if(Input.GetKeyDown(KeyCode.D)){
-                unit.build(Vector3(1,0,0));
-            }
-            //Exit build mode
-            else if(Input.GetKeyDown(KeyCode.B)){
-                unit.buildingMode=false;
-            }
-            //select next unit
-            else if(Input.GetKeyDown(KeyCode.Tab) && unitList.Count>1){
-                playerManagerScript.selectorNext();
-            }
-        }//the selected unit is in movement mode
-        else{
-            //Open up building mode
-            if(Input.GetKeyDown(KeyCode.B)){
-                if(resources>=50){
-                    unit.buildingMode=true;
-                }else{
-                    GameObject.Find("helpMessage").GetComponent.<Text>().text="You need at least 50 resources to train a worker";
-                    playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
-                }
-            }
-            //select the next unit
-            else if(Input.GetKeyDown(KeyCode.Tab) && unitList.Count>1){
-                playerManagerScript.selectorNext();
-            }
+    public function inputVector(){
+        if(Input.GetKeyDown(KeyCode.UpArrow)){
+            return Vector3(0,0,1);
         }
-       
+        else if(Input.GetKeyDown(KeyCode.DownArrow)){
+            return Vector3(0,0,-1);
+        }
+        else if(Input.GetKeyDown(KeyCode.LeftArrow)){
+            return Vector3(-1,0,0);
+        }
+        else if(Input.GetKeyDown(KeyCode.RightArrow)){
+            return Vector3(1,0,0);
+        }else{
+            return Vector3(0,0,0);
+        }
     }
-
-    function workerEvent(unit : worker){
-        if(unit.buildingMode==true){
-        //Build the c.c. in given direction
-            if(Input.GetKeyDown(KeyCode.W)){
-                unit.build(Vector3(0,0,1));
-            }
-            else if(Input.GetKeyDown(KeyCode.S)){
-                unit.build(Vector3(0,0,-1));
-            }
-            else if(Input.GetKeyDown(KeyCode.A)){
-                unit.build(Vector3(-1,0,0));
-            }
-            else if(Input.GetKeyDown(KeyCode.D)){
-                unit.build(Vector3(1,0,0));
-            }
-            //Exit build mode
-            else if(Input.GetKeyDown(KeyCode.B)){
-                unit.buildingMode=false;
-            }
-            else if(Input.GetKeyDown(KeyCode.Tab) && unitList.Count>1){
-                playerManagerScript.selectorNext();
-            }
-            }//else the selected unit is in movement mode
-        else{
-            //Move in the given direction if we didnt take an action
-            if(Input.GetKeyDown(KeyCode.W) && unit.tookAction==false){
-                unit.moveOrAttack(Vector3(0,0,1));
-            }
-            else if(Input.GetKeyDown(KeyCode.S) && unit.tookAction==false){
-                unit.moveOrAttack(Vector3(0,0,-1));
-            }
-            else if(Input.GetKeyDown(KeyCode.A) && unit.tookAction==false){
-                unit.moveOrAttack(Vector3(-1,0,0));
-            }
-            else if(Input.GetKeyDown(KeyCode.D) && unit.tookAction==false){
-                unit.moveOrAttack(Vector3(1,0,0));
-            }
-            //Open up building mode
-            else if(Input.GetKeyDown(KeyCode.B)){
-                if(resources>=400){
-                    if(unit.tookAction==false){
-                        unit.buildingMode=true;
-                    }else{
-                        GameObject.Find("helpMessage").GetComponent.<Text>().text="This unit took an action this turn already";
-                        playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
-                    }
-                }else{
-                    GameObject.Find("helpMessage").GetComponent.<Text>().text="You need at least 400 resources to build a hq";
-                    playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
-                }
-            }
-            //select next unit
-            else if(Input.GetKeyDown(KeyCode.Tab) && unitList.Count>1){
-                playerManagerScript.selectorNext();
-            }
+    
+    public function renewIDs(){
+        var i=0;
+        for(u in unitList){
+            u.ID=i;
+            i++;
         }
-    }*/
-
-        public function renewIDs(){
-            var i=0;
-            for(u in unitList){
-                u.ID=i;
-                i++;
-            }
-        }
+    }
 
 }

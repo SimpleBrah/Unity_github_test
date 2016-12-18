@@ -22,8 +22,8 @@ public class mouseManager extends MonoBehaviour{
                     if(hitObject.GetComponent(worker).ownerID==GameObject.Find("playerManager").GetComponent(playerManager).subTurn){
                         GameObject.Find("selector").GetComponent(selector).setSelectedUnit(hitObject);
                     }else{
-                        if(GameObject.Find("playerManager").GetComponent(playerManager).selector instanceof rocketLauncherMech){
-                            Debug.Log("attacking");
+                        if(GameObject.Find("playerManager").GetComponent(playerManager).selector instanceof rocketLauncherMech && GameObject.Find("playerManager").GetComponent(playerManager).selector.inputMode=="attack" && GameObject.Find("playerManager").GetComponent(playerManager).selector.tookAction==false){
+                            GameObject.Find("playerManager").GetComponent(playerManager).selector.attack(hitObject);
                         }else{
                             GameObject.Find("helpMessage").GetComponent.<Text>().text=hitObject.name;
                             GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
@@ -34,7 +34,7 @@ public class mouseManager extends MonoBehaviour{
                         GameObject.Find("selector").GetComponent(selector).setSelectedUnit(hitObject);
                     }else{
                         if(GameObject.Find("playerManager").GetComponent(playerManager).selector instanceof rocketLauncherMech){
-                            Debug.Log("attacking");
+                            GameObject.Find("playerManager").GetComponent(playerManager).selector.attack(hitObject);
                         }else{
                             GameObject.Find("helpMessage").GetComponent.<Text>().text=hitObject.name;
                             GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
@@ -45,7 +45,7 @@ public class mouseManager extends MonoBehaviour{
                         GameObject.Find("selector").GetComponent(selector).setSelectedUnit(hitObject);
                     }else{
                         if(GameObject.Find("playerManager").GetComponent(playerManager).selector instanceof rocketLauncherMech){
-                            Debug.Log("attacking");
+                            GameObject.Find("playerManager").GetComponent(playerManager).selector.attack(hitObject);
                         }else{
                             GameObject.Find("helpMessage").GetComponent.<Text>().text=hitObject.name;
                             GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;

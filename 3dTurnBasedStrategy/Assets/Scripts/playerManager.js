@@ -109,12 +109,12 @@ public class playerManager extends MonoBehaviour{
         //reset all unit action flags
         for(unit in playerList[subTurn-1].unitList){
             if(unit instanceof worker){
-                (unit as worker).buildingMode=false;
+                (unit as worker).inputMode="move";
                 (unit as worker).tookAction=false;
             }else if(unit instanceof hq){
                 (unit as hq).cooldown-=1;
             }else if(unit instanceof rocketLauncherMech){
-                (unit as rocketLauncherMech).buildingMode=false;
+                (unit as rocketLauncherMech).inputMode="move";
                 (unit as rocketLauncherMech).tookAction=false;
             }
             for(transformR in GameObject.FindGameObjectsWithTag("resource"))
@@ -126,9 +126,24 @@ public class playerManager extends MonoBehaviour{
         GameObject.Find("mapManager").GetComponent(mapManager).spawnPowerUps();
 
     }
+
+    function onMoveButton(){
+        GameObject.Find("playerManager").GetComponent(playerManager).selector.inputMode="move";
+    }
+
+    function onBuildButton(){
+        GameObject.Find("playerManager").GetComponent(playerManager).selector.inputMode="build";
+    }
+
+    function onAttackButton(){
+        if(GameObject.Find("playerManager").GetComponent(playerManager).selector instanceof rocketLauncherMech){
+            GameObject.Find("playerManager").GetComponent(playerManager).selector.inputMode="attack";
+        }
+    }
+
     //MOVE TO SELECTOR
     function selectorNext(){
-        selector.buildingMode=false;
+        selector.inputMode="move";
         //select the next id
         if(selectorID<playerList[selector.ownerID-1].unitList.Count-1){
             selector=playerList[selector.ownerID-1].unitList[selectorID+1];

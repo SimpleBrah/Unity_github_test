@@ -52,6 +52,11 @@ public class mapManager extends MonoBehaviour{
                     }
                 }
             }
+            for(pu in powerUpList){
+                if(pu.transform.position==floor.transform.position+Vector3(0,1,0)){
+                    isEmpty=false;
+                }
+            }
             var random : int = Random.Range(1,100);
             //Debug.Log(random+">98");
             if(isEmpty && (random>98)){

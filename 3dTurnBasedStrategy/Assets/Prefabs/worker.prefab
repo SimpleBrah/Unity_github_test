@@ -569,10 +569,14 @@ MonoBehaviour:
   ID: 0
   hp: 0
   buildingMode: 0
+  tookAction: 0
+  mode: 
+  cooldown: 0
   playerManagerScript: {fileID: 0}
   mapManagerScript: {fileID: 0}
   hqPrefab: {fileID: 114000010643976260, guid: 10a4b1594193bc04592bb08481a35dd3, type: 2}
-  tookAction: 0
+  rocketLauncherPrefab: {fileID: 114000010404510058, guid: 80515452ddc8a4141bcb9c7cd02f424d,
+    type: 2}
   hpSlider: {fileID: 1000012747178670}
 --- !u!222 &222000010997710002
 CanvasRenderer:

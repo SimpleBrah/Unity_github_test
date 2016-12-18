@@ -8,6 +8,7 @@ public class hq extends unit{
     public var mapManagerScript : mapManager;
     public var hpSlider : GameObject;
     public var cdSlider : GameObject;
+    public var mode : String;
     
     function Start () {
         playerManagerScript = GameObject.Find("playerManager").GetComponent(playerManager);
@@ -74,20 +75,20 @@ public class hq extends unit{
                 playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(workerPrefab,transform.position+direction,workerPrefab.transform.rotation));
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].buildingMode=false;
+                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].inputMode="move";
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].tookAction=false;
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].hp=100;
-                buildingMode=false;
+                inputMode="move";
                 cooldown=5;
                 playerManagerScript.playerList[ownerID-1].resources-=50;
             }else if(mode=="rocketLauncher" && playerManagerScript.playerList[ownerID-1].resources>=100){
                 playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(rocketLauncherPrefab,transform.position+direction,rocketLauncherPrefab.transform.rotation));
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].buildingMode=false;
+                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].inputMode="move";
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].tookAction=false;
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].hp=100;
-                buildingMode=false;
+                inputMode="move";
                 cooldown=5;
                 playerManagerScript.playerList[ownerID-1].resources-=100;
             }

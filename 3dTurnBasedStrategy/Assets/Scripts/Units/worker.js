@@ -7,6 +7,7 @@ public class worker extends unit{
     public var playerManagerScript : playerManager;
     public var mapManagerScript : mapManager;
     public var hqPrefab : hq;
+    public var rocketLauncherPrefab : rocketLauncherMech;
     public var hpSlider : GameObject;
     
 
@@ -28,7 +29,9 @@ public class worker extends unit{
                         Destroy(pu);
                         GameObject.Find("mapManager").GetComponent(mapManager).powerUpList.Remove(pu);
                     }else if(pu.tag=="rocket_launcher_power_up"){
-                        //change to a rocket launcher mech
+                        GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList[ID]=Instantiate(rocketLauncherPrefab,transform.position,rocketLauncherPrefab.transform.rotation);
+                        GameObject.Find("playerManager").GetComponent(playerManager).selector=GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList[ID];
+                        Destroy(gameObject);
                     }            
                 }
             }
@@ -59,10 +62,7 @@ public class worker extends unit{
                     transform.position-=direction;
                     //if enemy attack
                     if(p.ID!=ownerID){
-                        var dmg = Random.Range(20,50); 
-                        unit.hp-=dmg;
-                        GameObject.Find("helpMessage").GetComponent.<Text>().text="Hit for "+dmg;
-                        playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
+                        unit.takeDamage();
                     }
                 }
             }
@@ -116,8 +116,8 @@ public class worker extends unit{
             playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
             playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].cooldown=0;
             playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].hp=100;
-            playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].mode="worker";
-            playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].buildingMode=false;
+            (playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1] as hq).mode="worker";
+            playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].inputMode="move";
             tookAction=true;
             playerManagerScript.playerList[ownerID-1].resources-=400;
         }
