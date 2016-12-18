@@ -6,9 +6,7 @@ public class worker extends unit{
 
     public var playerManagerScript : playerManager;
     public var mapManagerScript : mapManager;
-    
     public var hqPrefab : hq;
-    public var tookAction : boolean;
     public var hpSlider : GameObject;
     
 
@@ -16,27 +14,26 @@ public class worker extends unit{
         playerManagerScript = GameObject.Find("playerManager").GetComponent(playerManager);
         mapManagerScript = GameObject.Find("mapManager").GetComponent(mapManager);
         //Debug.Log("worker starting");
-        buildingMode=false;
-        tookAction=false;
-        hp=100;
     }
 
     function Update () {
         if(hp<1){
-            playerManagerScript.playerList[ownerID-1].unitList.Remove(this);
-            playerManagerScript.playerList[ownerID-1].renewIDs();
-            Destroy(this.gameObject);
+            this.die();
         }
-        //for every power up
-        for(pu in GameObject.Find("mapManager").GetComponent(mapManager).powerUpList){
-            if(pu.transform.position==transform.position){
-                GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].resources+=50;
-                Destroy(pu);
-                GameObject.Find("mapManager").GetComponent(mapManager).powerUpList.Remove(pu);
+            //for every power up
+            for(pu in GameObject.Find("mapManager").GetComponent(mapManager).powerUpList){
+                if(pu.transform.position==transform.position){
+                    if(pu.tag=="resource_power_up"){
+                        GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].resources+=50;
+                        Destroy(pu);
+                        GameObject.Find("mapManager").GetComponent(mapManager).powerUpList.Remove(pu);
+                    }else if(pu.tag=="rocket_launcher_power_up"){
+                        //change to a rocket launcher mech
+                    }            
+                }
             }
-        }
-        //display hp
-        hpSlider.GetComponent(Slider).value=hp;
+            //display hp
+            hpSlider.GetComponent(Slider).value=hp;
     }
 
     public function moveOrAttack(direction : Vector3){
@@ -45,7 +42,7 @@ public class worker extends unit{
         //if not on floor go back
         if(mapManagerScript.onFloor(transform,Vector3(0,0,0))==false){
             transform.position-=direction;
-            playerManagerScript.helpMessageText.text="Cant move there";
+            GameObject.Find("helpMessage").GetComponent.<Text>().text="Cant move there";
             playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
         }else{
         
@@ -64,7 +61,7 @@ public class worker extends unit{
                     if(p.ID!=ownerID){
                         var dmg = Random.Range(20,50); 
                         unit.hp-=dmg;
-                        playerManagerScript.helpMessageText.text="Hit for "+dmg;
+                        GameObject.Find("helpMessage").GetComponent.<Text>().text="Hit for "+dmg;
                         playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
                     }
                 }
@@ -96,7 +93,7 @@ public class worker extends unit{
         //if not on floor cant build 
         if(mapManagerScript.onFloor(transform, direction)==false){
             targetValid=false;
-            playerManagerScript.helpMessageText.text="Must build the hq on land";
+            GameObject.Find("helpMessage").GetComponent.<Text>().text="Must build the hq on land";
             playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
         }
 
@@ -117,7 +114,10 @@ public class worker extends unit{
             playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(hqPrefab,transform.position+direction,hqPrefab.transform.rotation));
             playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
             playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
-            buildingMode=false;
+            playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].cooldown=0;
+            playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].hp=100;
+            playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].mode="worker";
+            playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].buildingMode=false;
             tookAction=true;
             playerManagerScript.playerList[ownerID-1].resources-=400;
         }

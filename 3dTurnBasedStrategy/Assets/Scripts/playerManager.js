@@ -8,31 +8,37 @@ public class playerManager extends MonoBehaviour{
     public var playerPrefab : player;
     public var numberOfPlayers : int;
     public var playerList : List.<player> = new List.<player>();
-    public var playerMaterials= new Material[2];
+    //public var playerMaterials= new Material[2];
     //UI fields
-    public var resourcesText = new Text[2];
-    public var subTurnText : Text;
-    public var selectedMessageText : Text;
-    public var helpMessageText : Text;
+    //public var resourcesText = new Text[2];
+    //public var subTurnText : Text;
+    //public var selectedMessageText : Text;
+    //public var helpMessageText : Text;
+    //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
     public var helpMessageStartTime : float;
     public var helpMessageDisplayTime : float;
     public var TimeText : Text;
+    //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
     //turn fields
     public var turn : int;
     public var subTurn : int;
     //selector fields
+    //MOVE TO SELECTOR
     public var selector : unit;
     public var selectorID : int;
     var selectorRange = new String[4];  //not used
+    //MOVE TO SELECTOR
 
     function Start () {
 
+        //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
         helpMessageDisplayTime=2;
-
+        //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
+        //MOVE TO SELECTOR
         for(var i=0;i<4;i++){
             selectorRange[i]="Empty";   //not used
         }
-
+        //MOVE TO SELECTOR
         //player setup
         numberOfPlayers=2;
         for(i=0;i<numberOfPlayers;i++){
@@ -40,31 +46,38 @@ public class playerManager extends MonoBehaviour{
             playerList[i].ID=i+1;
             playerList[i].startingPosition=GameObject.Find("mapManager").GetComponent(mapManager).startingPosition[i].transform;
             playerList[i].resources=350;
-            resourcesText[i].text="Resource: "+playerList[i].resources;
+            GameObject.Find("HUD/player"+(i+1)+"Resources").GetComponent.<Text>().text="Resource: "+playerList[i].resources;//resourcesText[i].text="Resource: "+playerList[i].resources;
         }
         //turn setup
         turn=1;
         subTurn=1;
-        subTurnText.text="Turn: "+subTurn;
+        GameObject.Find("HUD/subTurn").GetComponent.<Text>().text="Turn: "+subTurn;
 
     }
 
     function Update () {
-
+        //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
         if((helpMessageStartTime+helpMessageDisplayTime)<Time.realtimeSinceStartup){
-            helpMessageText.text="";
+            GameObject.Find("helpMessage").GetComponent.<Text>().text="";
         }
+        //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
         //UI update
-        resourcesText[subTurn-1].text="Resource: "+playerList[subTurn-1].resources;
-        subTurnText.text="Turn: "+subTurn;
+        GameObject.Find("HUD/player"+subTurn+"Resources").GetComponent.<Text>().text="Resource: "+playerList[subTurn-1].resources;
+        GameObject.Find("HUD/subTurn").GetComponent.<Text>().text="Turn: "+subTurn;
         //Material update (this should not be in update?)
         var objects = GameObject.FindGameObjectsWithTag("colored_parts");
         for (var obj : GameObject in objects) {
             if(obj.transform.parent.gameObject.GetComponent(worker)!=null){
-                obj.GetComponent.<Renderer>().material=playerMaterials[obj.transform.parent.gameObject.GetComponent(worker).ownerID-1];
+                var Wmaterial : String = "player"+obj.transform.parent.gameObject.GetComponent(worker).ownerID;
+                obj.GetComponent.<Renderer>().material=Resources.Load(Wmaterial, typeof(Material));//playerMaterials[obj.transform.parent.gameObject.GetComponent(worker).ownerID-1];
             }
             if(obj.transform.parent.gameObject.GetComponent(hq)!=null){
-                obj.GetComponent.<Renderer>().material=playerMaterials[obj.transform.parent.gameObject.GetComponent(hq).ownerID-1];
+                var HQmaterial : String = "player"+obj.transform.parent.gameObject.GetComponent(hq).ownerID;
+                obj.GetComponent.<Renderer>().material=Resources.Load(HQmaterial, typeof(Material));//playerMaterials[obj.transform.parent.gameObject.GetComponent(hq).ownerID-1];
+            }
+            if(obj.transform.parent.gameObject.GetComponent(rocketLauncherMech)!=null){
+                var RLmaterial : String = "player"+obj.transform.parent.gameObject.GetComponent(rocketLauncherMech).ownerID;
+                obj.GetComponent.<Renderer>().material=Resources.Load(RLmaterial, typeof(Material));//playerMaterials[obj.transform.parent.gameObject.GetComponent(hq).ownerID-1];
             }
         }
         //winCondition update
@@ -73,6 +86,12 @@ public class playerManager extends MonoBehaviour{
                 SceneManager.LoadScene (SceneManager.GetActiveScene ().name);
             }
         }
+            //display selected unit and hp
+            if(selector instanceof hq){
+                GameObject.Find("selectedMessage").GetComponent.<Text>().text="Selected "+selector+"hp="+selector.hp+" cd="+(selector as hq).cooldown;
+            }else{
+                GameObject.Find("selectedMessage").GetComponent.<Text>().text="Selected "+selector+"hp="+selector.hp;
+            }
 
     }
 
@@ -86,12 +105,7 @@ public class playerManager extends MonoBehaviour{
         //selector update
         selector=playerList[subTurn-1].unitList[0];
         selectorID=0;
-        //display selected unit and hp
-        if(selector instanceof hq){
-            selectedMessageText.text="Selected "+selector+"hp="+selector.hp+" cd="+(selector as hq).cooldown;
-        }else{
-            selectedMessageText.text="Selected "+selector+"hp="+selector.hp;
-        }
+        
         //reset all unit action flags
         for(unit in playerList[subTurn-1].unitList){
             if(unit instanceof worker){
@@ -99,11 +113,11 @@ public class playerManager extends MonoBehaviour{
                 (unit as worker).tookAction=false;
             }else if(unit instanceof hq){
                 (unit as hq).cooldown-=1;
-                if((unit as hq).buildingPhase<3){
-                    (unit as hq).buildingPhase++;
-                }
+            }else if(unit instanceof rocketLauncherMech){
+                (unit as rocketLauncherMech).buildingMode=false;
+                (unit as rocketLauncherMech).tookAction=false;
             }
-            for(transformR in GameObject.Find("mapManager").GetComponent(mapManager).resourcePosition)
+            for(transformR in GameObject.FindGameObjectsWithTag("resource"))
                 if(unit.transform.position==transformR.transform.position){
                     playerList[subTurn-1].resources+=50;
                 }
@@ -112,7 +126,7 @@ public class playerManager extends MonoBehaviour{
         GameObject.Find("mapManager").GetComponent(mapManager).spawnPowerUps();
 
     }
-
+    //MOVE TO SELECTOR
     function selectorNext(){
         selector.buildingMode=false;
         //select the next id
@@ -125,10 +139,12 @@ public class playerManager extends MonoBehaviour{
         }
         //display selected unit and hp
         if(selector instanceof hq){
-            selectedMessageText.text="Selected "+selector+"hp="+selector.hp+" cd="+(selector as hq).cooldown;
+            GameObject.Find("selectedMessage").GetComponent.<Text>().text="Selected "+selector+"hp="+selector.hp+" cd="+(selector as hq).cooldown;
+        }else if(selector instanceof worker){
+            GameObject.Find("selectedMessage").GetComponent.<Text>().text="Selected "+selector+"hp="+selector.hp;
         }else{
-            selectedMessageText.text="Selected "+selector+"hp="+selector.hp;
+            GameObject.Find("selectedMessage").GetComponent.<Text>().text="Selected "+selector+"hp="+selector.hp;
         }
     }
-
+    //MOVE TO SELECTOR
 }

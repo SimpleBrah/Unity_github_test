@@ -7,25 +7,27 @@ public class mouseManager extends MonoBehaviour{
     }
 
     function Update () {
+        //ray origin camera, end mouse position
         var ray : Ray = Camera.main.ScreenPointToRay( Input.mousePosition );
 
         var hitInfo : RaycastHit;
 
         if(Input.GetMouseButtonDown(0)){
+            //if ray hit anything
             if(Physics.Raycast(ray, hitInfo)){
-                Debug.Log("ray fired");
+                //gameObject that is hit
                 var hitObject : GameObject = hitInfo.transform.root.gameObject;
-                
-                if(hitObject.GetComponent(worker) && hitObject.GetComponent(worker).ownerID==GameObject.Find("playerManager").GetComponent(playerManager).subTurn){
-                    GameObject.Find("playerManager").GetComponent(playerManager).selector=GameObject.Find("playerManager").GetComponent(playerManager).playerList[hitObject.GetComponent(worker).ownerID-1].unitList[hitObject.GetComponent(worker).ID];
-                    GameObject.Find("playerManager").GetComponent(playerManager).selectorID=hitObject.GetComponent(worker).ID;
-                }
 
-                if(hitObject.GetComponent(hq) && hitObject.GetComponent(hq).ownerID==GameObject.Find("playerManager").GetComponent(playerManager).subTurn){
-                    GameObject.Find("playerManager").GetComponent(playerManager).selector=GameObject.Find("playerManager").GetComponent(playerManager).playerList[hitObject.GetComponent(hq).ownerID-1].unitList[hitObject.GetComponent(hq).ID];
-                    GameObject.Find("playerManager").GetComponent(playerManager).selectorID=hitObject.GetComponent(hq).ID;
+                if(hitObject.GetComponent(worker).ownerID==GameObject.Find("playerManager").GetComponent(playerManager).subTurn){
+                    GameObject.Find("selector").GetComponent(selector).setSelectedUnit(hitObject);
+                }else{
+                    if(GameObject.Find("playerManager").GetComponent(playerManager).selector instanceof rocketLauncherMech){
+                        Debug.Log("attacking");
+                    }else{
+                        GameObject.Find("helpMessage").GetComponent.<Text>().text=hitObject.name;
+                        GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
+                    }
                 }
-
             }
         }
     }

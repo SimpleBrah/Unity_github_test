@@ -435,8 +435,11 @@ MonoBehaviour:
   buildingMode: 0
   workerPrefab: {fileID: 114000012962310194, guid: b047c12307bbbed4c90dbbe754e8dc42,
     type: 2}
+  rocketLauncherPrefab: {fileID: 114000010404510058, guid: 80515452ddc8a4141bcb9c7cd02f424d,
+    type: 2}
   playerManagerScript: {fileID: 0}
   mapManagerScript: {fileID: 0}
+  mode: 
   buildingPhase: 0
   cooldown: 0
   hpSlider: {fileID: 1000012287027128}

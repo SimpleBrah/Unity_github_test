@@ -10,6 +10,9 @@ TagManager:
   - ramp
   - player_spawn
   - resource
+  - resource_power_up
+  - rocket_league_power_up
+  - rocket_launcher_power_up
   layers:
   - Default
   - TransparentFX
