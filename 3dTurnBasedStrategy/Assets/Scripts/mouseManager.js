@@ -51,6 +51,16 @@ public class mouseManager extends MonoBehaviour{
                             GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
                         }
                     }
+                }else if(hitInfo.transform.gameObject.tag=="floor" && GameObject.Find("playerManager").GetComponent(playerManager).selector.tookAction==false){
+                    Debug.Log("floor");
+                    if(Vector3.Distance(hitInfo.transform.gameObject.transform.position+Vector3(0,1,0),GameObject.Find("playerManager").GetComponent(playerManager).selector.transform.position)==1){
+                        var direction : Vector3 = (hitInfo.transform.gameObject.transform.position+Vector3(0,1,0)-GameObject.Find("playerManager").GetComponent(playerManager).selector.transform.position).normalized;
+                        if(GameObject.Find("playerManager").GetComponent(playerManager).selector.inputMode=="move"){
+                            GameObject.Find("playerManager").GetComponent(playerManager).selector.moveOrAttack(direction);
+                        }else if(GameObject.Find("playerManager").GetComponent(playerManager).selector.inputMode=="build"){
+                            GameObject.Find("playerManager").GetComponent(playerManager).selector.build(direction);
+                        }
+                    }
                 }
             }
         }
