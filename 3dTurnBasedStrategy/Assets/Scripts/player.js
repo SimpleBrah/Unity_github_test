@@ -46,65 +46,43 @@ public class player extends MonoBehaviour{
             else if(Input.GetKeyDown(KeyCode.B)){
                 playerManagerScript.selector.inputMode="build";
             }
-            else if(Input.GetKeyDown(KeyCode.A) && (playerManagerScript.selector instanceof rocketLauncherMech)){
+            else if(Input.GetKeyDown(KeyCode.A)){
                 playerManagerScript.selector.inputMode="attack";
             }
-            else if(playerManagerScript.selector.inputMode=="move" && playerManagerScript.selector.tookAction==false && inputVector()!=Vector3(0,0,0)){
-                playerManagerScript.selector.moveOrAttack(inputVector());
-            }else if(playerManagerScript.selector.inputMode=="build" && playerManagerScript.selector.tookAction==false  && inputVector()!=Vector3(0,0,0)){
-                playerManagerScript.selector.build(inputVector());
-            }
-            else if(playerManagerScript.selector.inputMode=="attack"){
-                //not done here
-            }
-            //inputMode build
-            /*if(playerManagerScript.selector.inputMode=="build"){
-                if(Input.GetKeyDown(KeyCode.W)){
-                    playerManagerScript.selector.build(Vector3(0,0,1));
-                }
-                else if(Input.GetKeyDown(KeyCode.S)){
-                    playerManagerScript.selector.build(Vector3(0,0,-1));
-                }
-                else if(Input.GetKeyDown(KeyCode.A)){
-                    playerManagerScript.selector.build(Vector3(-1,0,0));
-                }
-                else if(Input.GetKeyDown(KeyCode.D)){
-                    playerManagerScript.selector.build(Vector3(1,0,0));
-                }
-                else if(Input.GetKeyDown(KeyCode.B)){
-                    playerManagerScript.selector.inputMode="move";
-                }
-                else if(Input.GetKeyDown(KeyCode.Tab) && unitList.Count>1){
-                    playerManagerScript.selectorNext();
-                }
-            }//inputMode move
-            else if(playerManagerScript.selector.inputMode=="move"){
-                if(Input.GetKeyDown(KeyCode.W) && playerManagerScript.selector.tookAction==false){
-                    playerManagerScript.selector.moveOrAttack(Vector3(0,0,1));
-                }
-                else if(Input.GetKeyDown(KeyCode.S) && playerManagerScript.selector.tookAction==false){
-                    playerManagerScript.selector.moveOrAttack(Vector3(0,0,-1));
-                }
-                else if(Input.GetKeyDown(KeyCode.A) && playerManagerScript.selector.tookAction==false){
-                    playerManagerScript.selector.moveOrAttack(Vector3(-1,0,0));
-                }
-                else if(Input.GetKeyDown(KeyCode.D) && playerManagerScript.selector.tookAction==false){
-                    playerManagerScript.selector.moveOrAttack(Vector3(1,0,0));
-                }
-                if(Input.GetKeyDown(KeyCode.B)){
-                    if(resources>=50){
-                        playerManagerScript.selector.inputMode="build";
-                    }else{
-                        GameObject.Find("helpMessage").GetComponent.<Text>().text="You need at least 50 resources to train a worker";
-                        playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
+            else if(playerManagerScript.selector.inputMode=="move" && playerManagerScript.selector.tookAction==false){
+                if(inputVector()!=Vector3(0,0,0)){
+                    playerManagerScript.selector.moveOrAttack(playerManagerScript.selector.transform.position+inputVector());
+                }else if(Input.GetMouseButtonDown(0)){
+                    var mTarget : GameObject = GameObject.Find("mouseManager").GetComponent(mouseManager).getRayCastHit();
+                    if(mTarget!=null && Vector3.Distance(mTarget.transform.position,playerManagerScript.selector.transform.position+Vector3(0,-1,0))==1){
+                        playerManagerScript.selector.moveOrAttack(mTarget.transform.position+Vector3(0,1,0));
                     }
                 }
-                else if(Input.GetKeyDown(KeyCode.Tab) && unitList.Count>1){
-                    playerManagerScript.selectorNext();
+            }
+            else if(playerManagerScript.selector.inputMode=="build" && playerManagerScript.selector.tookAction==false){
+                if(inputVector()!=Vector3(0,0,0)){
+                    playerManagerScript.selector.build(playerManagerScript.selector.transform.position+inputVector());
+                }else if(Input.GetMouseButtonDown(0)){
+                    var bTarget : GameObject = GameObject.Find("mouseManager").GetComponent(mouseManager).getRayCastHit();
+                    if(bTarget!=null && Vector3.Distance(bTarget.transform.position,playerManagerScript.selector.transform.position+Vector3(0,-1,0))==1){
+                        playerManagerScript.selector.build(bTarget.transform.position+Vector3(0,1,0));
+                    }
                 }
-            }else if(playerManagerScript.selector.inputMode=="attack"){
-
-            }*/
+            }
+            else if(playerManagerScript.selector.inputMode=="attack"  && playerManagerScript.selector.tookAction==false){
+                if(inputVector()!=Vector3(0,0,0)){
+                    for(p in playerManagerScript.playerList){
+                        for(u in p.unitList){
+                            if(u.transform.position==playerManagerScript.selector.transform.position+inputVector()){
+                                playerManagerScript.selector.moveOrAttack(playerManagerScript.selector.transform.position+inputVector());
+                            }
+                        }
+                    }
+                    playerManagerScript.selector.moveOrAttack(playerManagerScript.selector.transform.position+inputVector());
+                }else if(Input.GetMouseButtonDown(0)){
+                  
+                }
+            }
         }
     }
 

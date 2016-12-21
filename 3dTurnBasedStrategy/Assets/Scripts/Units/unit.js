@@ -17,15 +17,15 @@ public class unit extends MonoBehaviour{
         
     }
 
-    virtual function build(direction : Vector3){
+    virtual function build(target : Vector3){
 
     }
 
-    virtual function attack(target : GameObject){
+    virtual function attack(target : unit){
 
     }
 
-    virtual function moveOrAttack(direction : Vector3){
+    virtual function moveOrAttack(target : Vector3){
 
     }
     
@@ -40,5 +40,24 @@ public class unit extends MonoBehaviour{
         this.hp-=dmg;
         GameObject.Find("helpMessage").GetComponent.<Text>().text="Hit for "+dmg;
         GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
+    }
+    function inLineOfSight(u : unit){
+        //var ray = new Ray (transform.position, u.transform.position);
+        //Debug.Log("ray: this "+transform.position+"unit "+u.transform.position);
+        //Create a RaycastHit to store target hit
+        var hitInfo : RaycastHit;
+        if(Physics.Linecast(transform.position,u.transform.position,hitInfo)){
+            Debug.Log("ray did hit");
+            if(hitInfo.transform.root.gameObject.transform.position==u.transform.position){
+                Debug.Log("hitInfo "+hitInfo.transform.root.transform.position+" unit "+u.transform.position);
+                return true;
+            }else{
+                Debug.Log("hitInfo "+hitInfo.transform.root.transform.position+" unit "+u.transform.position);
+                return false;
+            }
+        }else{
+            Debug.Log("ray didnt hit");
+            return false;
+        }
     }
 }

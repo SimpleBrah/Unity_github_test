@@ -29,9 +29,18 @@ public class worker extends unit{
                         Destroy(pu);
                         GameObject.Find("mapManager").GetComponent(mapManager).powerUpList.Remove(pu);
                     }else if(pu.tag=="rocket_launcher_power_up"){
-                        GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList[ID]=Instantiate(rocketLauncherPrefab,transform.position,rocketLauncherPrefab.transform.rotation);
+                        GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList.Remove(this);
+                        GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList.Insert(ID,Instantiate(rocketLauncherPrefab,transform.position,rocketLauncherPrefab.transform.rotation));
+                        //GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList[ID]=Instantiate(rocketLauncherPrefab,transform.position,rocketLauncherPrefab.transform.rotation);
                         GameObject.Find("playerManager").GetComponent(playerManager).selector=GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList[ID];
+                        GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList[ID].ownerID=ownerID;
+                        GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList[ID].ID=ID;
+                        GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList[ID].inputMode="move";
+                        GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList[ID].tookAction=false;
+                        GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].unitList[ID].hp=100;
                         Destroy(gameObject);
+                        Destroy(pu);
+                        GameObject.Find("mapManager").GetComponent(mapManager).powerUpList.Remove(pu);
                     }            
                 }
             }
@@ -39,12 +48,13 @@ public class worker extends unit{
             hpSlider.GetComponent(Slider).value=hp;
     }
 
-    public function moveOrAttack(direction : Vector3){
+    public function moveOrAttack(target : Vector3){
+        var move : boolean = true;
         //move
-        transform.position+=direction;
+        //transform.position+=direction;
         //if not on floor go back
-        if(mapManagerScript.onFloor(transform,Vector3(0,0,0))==false){
-            transform.position-=direction;
+        if(Vector3.Distance(transform.position,target)==1 && mapManagerScript.onFloor(target)==false){
+            //transform.position-=direction;
             GameObject.Find("helpMessage").GetComponent.<Text>().text="Cant move there";
             playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
         }else{
@@ -57,11 +67,12 @@ public class worker extends unit{
                     //that is not this unit
                 }
                 //check for collision
-                else if(unit.transform.position==transform.position){
+                else if(unit.transform.position==target){
                     //move back
-                    transform.position-=direction;
+                    //transform.position-=direction;
                     //if enemy attack
                     if(p.ID!=ownerID){
+                        move=false;
                         unit.takeDamage();
                     }
                 }
@@ -69,7 +80,7 @@ public class worker extends unit{
         }
 
         //if over ramp go again and down
-        for(ramp in mapManagerScript.rampPosition){
+        /*for(ramp in mapManagerScript.rampPosition){
             if(transform.position==ramp.transform.position+Vector3(0,1,0)){
                 transform.position+=direction;
                 transform.position+=Vector3(0,-1,0);
@@ -78,20 +89,22 @@ public class worker extends unit{
                 transform.position+=direction;
                 transform.position+=Vector3(0,1,0);
             }
-        }
-  
+        }*/
+        if(move){
+            transform.position=target;
+        } 
         tookAction=true;
 
         }
 
     }
 
-    public function build(direction : Vector3){
+    public function build(target : Vector3){
         
         var targetValid : boolean = true;
         
         //if not on floor cant build 
-        if(mapManagerScript.onFloor(transform, direction)==false){
+        if(mapManagerScript.onFloor(target)==false){
             targetValid=false;
             GameObject.Find("helpMessage").GetComponent.<Text>().text="Must build the hq on land";
             playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
@@ -105,13 +118,15 @@ public class worker extends unit{
                     //that is not this unit
                 }
                 //check for collision
-                else if(unit.transform.position==transform.position+direction){
+                else if(unit.transform.position==target){
                     targetValid=false;
+                    GameObject.Find("helpMessage").GetComponent.<Text>().text="You cant build there";
+                    playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
                 }
             }
         }
         if(targetValid && playerManagerScript.playerList[ownerID-1].resources>=400){
-            playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(hqPrefab,transform.position+direction,hqPrefab.transform.rotation));
+            playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(hqPrefab,target,hqPrefab.transform.rotation));
             playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
             playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
             playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].cooldown=0;
@@ -123,6 +138,13 @@ public class worker extends unit{
         }
         //add it to the buildingList of owner player unitsList
         //unitList.Add(Instantiate(workerPrefab,startingPosition.position,workerPrefab.transform.rotation));
+    }
+
+    public function attack(target : unit){
+        if(Vector3.Distance(target.transform.position,transform.position)==1){
+            target.takeDamage();
+            tookAction=true;
+        }
     }
 
 }

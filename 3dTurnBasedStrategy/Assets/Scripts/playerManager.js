@@ -18,6 +18,7 @@ public class playerManager extends MonoBehaviour{
     public var helpMessageStartTime : float;
     public var helpMessageDisplayTime : float;
     public var TimeText : Text;
+    public var startOfTurnTime : float;
     //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
     //turn fields
     public var turn : int;
@@ -30,7 +31,7 @@ public class playerManager extends MonoBehaviour{
     //MOVE TO SELECTOR
 
     function Start () {
-
+        startOfTurnTime=0;
         //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
         helpMessageDisplayTime=2;
         //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
@@ -56,6 +57,10 @@ public class playerManager extends MonoBehaviour{
     }
 
     function Update () {
+        GameObject.Find("Timer").GetComponent.<Slider>().value=Time.realtimeSinceStartup-startOfTurnTime;
+        if(GameObject.Find("Timer").GetComponent.<Slider>().value>=60){
+            onEndTurn();
+        }
         //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
         if((helpMessageStartTime+helpMessageDisplayTime)<Time.realtimeSinceStartup){
             GameObject.Find("helpMessage").GetComponent.<Text>().text="";
@@ -96,6 +101,7 @@ public class playerManager extends MonoBehaviour{
     }
 
     function onEndTurn(){
+        startOfTurnTime=Time.realtimeSinceStartup;
         //turn update
         subTurn++;
         if(subTurn>numberOfPlayers){

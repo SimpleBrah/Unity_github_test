@@ -22,17 +22,17 @@ public class mapManager extends MonoBehaviour{
 
     }
 
-    public function onFloor(unit : Transform,direction : Vector3){
+    public function onFloor(unit : Vector3){
         var result = false;
         //check if target is on floor tile
         for(floor in GameObject.FindGameObjectsWithTag("floor")){
-            if(floor.transform.position==(unit.position+Vector3(0,-1,0)+direction)){
+            if(floor.transform.position==(unit+Vector3(0,-1,0))){
                 result = true;
             }
         }
         //check if target is on ramp tile
         for(ramp in rampPosition){
-            if(ramp.transform.position==(unit.position+Vector3(0,-1,0)+direction)){
+            if(ramp.transform.position==(unit+Vector3(0,-1,0))){
                 result = true;
             }
         }
@@ -57,10 +57,10 @@ public class mapManager extends MonoBehaviour{
                     isEmpty=false;
                 }
             }
-            var random : int = Random.Range(1,100);
+            var random : int = Random.Range(0,300);
             //Debug.Log(random+">98");
-            if(isEmpty && (random>98)){
-                if(Random.Range(1,10)>8){
+            if(isEmpty && (random==299)){
+                if(Random.Range(1,8)==7){
                     powerUpList.Add(Instantiate(rocketLauncherPowerUpPrefab,floor.transform.position+Vector3(0,1,0),rocketLauncherPowerUpPrefab.transform.rotation));
                 }else{
                     powerUpList.Add(Instantiate(resourcePowerUpPrefab,floor.transform.position+Vector3(0,1,0),resourcePowerUpPrefab.transform.rotation));

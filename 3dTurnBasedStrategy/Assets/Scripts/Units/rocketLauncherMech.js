@@ -7,44 +7,53 @@ public class rocketLauncherMech extends unit{
     }
 
     function Update () {
+        if(hp<1){
+            this.die();
+        }
 
-    }
-
-    public function attack(target : GameObject){
-        if(transform.position.x==target.transform.position.x && Mathf.Abs(transform.position.z-target.transform.position.z)<4){
-            if(target.GetComponent(worker)){
-                target.GetComponent(worker).takeDamage();
-                tookAction=true;
-            }else if(target.GetComponent(hq)){
-                target.GetComponent(hq).takeDamage();
-                tookAction=true;
-            }else if(target.GetComponent(rocketLauncherMech)){
-                target.GetComponent(rocketLauncherMech).takeDamage();
-                tookAction=true;
-            }
-        }else if(transform.position.z==target.transform.position.z && Mathf.Abs(transform.position.x-target.transform.position.x)<4){
-            if(target.GetComponent(worker)){
-                target.GetComponent(worker).takeDamage();
-                tookAction=true;
-            }else if(target.GetComponent(hq)){
-                target.GetComponent(hq).takeDamage();
-                tookAction=true;
-            }else if(target.GetComponent(rocketLauncherMech)){
-                target.GetComponent(rocketLauncherMech).takeDamage();
-                tookAction=true;
+        for(pu in GameObject.Find("mapManager").GetComponent(mapManager).powerUpList){
+            if(pu.transform.position==transform.position){
+                if(pu.tag=="resource_power_up"){
+                    GameObject.Find("playerManager").GetComponent(playerManager).playerList[ownerID-1].resources+=50;
+                    Destroy(pu);
+                    GameObject.Find("mapManager").GetComponent(mapManager).powerUpList.Remove(pu);
+                }else if(pu.tag=="rocket_launcher_power_up"){
+                    //has seed to build the upgraded hq
+                }            
             }
         }
     }
 
-    public function moveOrAttack(direction : Vector3){
+    public function attack(target : unit){
+        if(this.inLineOfSight(target)){
+            Debug.Log("in line of sight");
+            if(transform.position.x==target.transform.position.x && Mathf.Abs(transform.position.z-target.transform.position.z)<4){
+                target.takeDamage();
+                tookAction=true;
+            }else if(transform.position.z==target.transform.position.z && Mathf.Abs(transform.position.x-target.transform.position.x)<4){
+                target.GetComponent(worker).takeDamage();
+                tookAction=true;
+            }
+        }else{
+            Debug.Log("not in line of sight");
+        }
+    }
+
+    public function moveOrAttack(target : Vector3){
+        var move : boolean = true;
         //move
-        transform.position+=direction;
+        //transform.position+=direction;
         //if not on floor go back
-        if(GameObject.Find("mapManager").GetComponent(mapManager).onFloor(transform,Vector3(0,0,0))==false){
+        if(Vector3.Distance(transform.position,target)==1 && GameObject.Find("mapManager").GetComponent(mapManager).onFloor(target)==false){
+            //transform.position-=direction;
+            GameObject.Find("helpMessage").GetComponent.<Text>().text="Cant move there";
+            GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
+        }
+        /*if(GameObject.Find("mapManager").GetComponent(mapManager).onFloor(transform.position)==false){
             transform.position-=direction;
             GameObject.Find("helpMessage").GetComponent.<Text>().text="Cant move there";
             GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
-        }else{
+        }*/else{
             for(p in GameObject.Find("playerManager").GetComponent(playerManager).playerList){
                 for(unit in p.unitList){
                     if(unit.ID==GameObject.Find("playerManager").GetComponent(playerManager).selectorID && unit.ownerID==GameObject.Find("playerManager").GetComponent(playerManager).selector.ownerID){
@@ -53,9 +62,10 @@ public class rocketLauncherMech extends unit{
                         //check for collision
                     else if(unit.transform.position==transform.position){
                         //move back
-                        transform.position-=direction;
+                        //transform.position-=direction;
                         //if enemy attack
                         if(p.ID!=ownerID){
+                            move=false;
                             unit.takeDamage();
                         }
                     }
@@ -63,7 +73,7 @@ public class rocketLauncherMech extends unit{
             }
 
             //if over ramp go again and down
-            for(ramp in GameObject.Find("mapManager").GetComponent(mapManager).rampPosition){
+            /*for(ramp in GameObject.Find("mapManager").GetComponent(mapManager).rampPosition){
                 if(transform.position==ramp.transform.position+Vector3(0,1,0)){
                     transform.position+=direction;
                     transform.position+=Vector3(0,-1,0);
@@ -72,8 +82,10 @@ public class rocketLauncherMech extends unit{
                     transform.position+=direction;
                     transform.position+=Vector3(0,1,0);
                 }
-            }
-  
+            }*/
+            if(move){
+                transform.position=target;
+            } 
             tookAction=true;
 
         }

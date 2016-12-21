@@ -37,7 +37,7 @@ public class hq extends unit{
         cdSlider.GetComponent(Slider).value=cooldown;
     }
 
-    public function build(direction : Vector3){
+    public function build(target : Vector3){
         
         var targetValid : boolean = true;
         //if on cooldown (>0) cant build
@@ -48,7 +48,7 @@ public class hq extends unit{
         }
 
         //if not on floor cant build 
-        if(mapManagerScript.onFloor(transform, direction)==false){
+        if(mapManagerScript.onFloor(target)==false){
             targetValid=false;
             GameObject.Find("helpMessage").GetComponent.<Text>().text="Must build the hq on land";
             playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
@@ -62,7 +62,7 @@ public class hq extends unit{
                     //that is not this unit
                 }
                 //check for collision
-                else if(unit.transform.position==transform.position+direction){
+                else if(unit.transform.position==target){
                     targetValid=false;
                     GameObject.Find("helpMessage").GetComponent.<Text>().text="You cant build there";
                     playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
@@ -72,7 +72,7 @@ public class hq extends unit{
     
         if(targetValid==true){
             if(mode=="worker" && playerManagerScript.playerList[ownerID-1].resources>=50){
-                playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(workerPrefab,transform.position+direction,workerPrefab.transform.rotation));
+                playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(workerPrefab,target,workerPrefab.transform.rotation));
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].inputMode="move";
@@ -82,7 +82,7 @@ public class hq extends unit{
                 cooldown=5;
                 playerManagerScript.playerList[ownerID-1].resources-=50;
             }else if(mode=="rocketLauncher" && playerManagerScript.playerList[ownerID-1].resources>=100){
-                playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(rocketLauncherPrefab,transform.position+direction,rocketLauncherPrefab.transform.rotation));
+                playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(rocketLauncherPrefab,target,rocketLauncherPrefab.transform.rotation));
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
                 playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].inputMode="move";
