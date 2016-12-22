@@ -47,7 +47,9 @@ public class playerManager extends MonoBehaviour{
             playerList[i].ID=i+1;
             playerList[i].startingPosition=GameObject.Find("mapManager").GetComponent(mapManager).startingPosition[i].transform;
             playerList[i].resources=350;
+            playerList[i].energy=5;
             GameObject.Find("HUD/RawImage/player"+(i+1)+"Resources").GetComponent.<Text>().text=""+playerList[i].resources;//resourcesText[i].text="Resource: "+playerList[i].resources;
+            GameObject.Find("HUD/player"+(i+1)+"Energy").GetComponent.<Text>().text=""+playerList[i].energy;
         }
         //turn setup
         turn=1;
@@ -68,6 +70,7 @@ public class playerManager extends MonoBehaviour{
         //MOVE TO A POPUP MESSAGE SCRIPT SOMEWHERE
         //UI update
         GameObject.Find("HUD/RawImage/player"+subTurn+"Resources").GetComponent.<Text>().text=""+playerList[subTurn-1].resources;
+        GameObject.Find("HUD/player"+(subTurn)+"Energy").GetComponent.<Text>().text=""+playerList[subTurn-1].energy;
         GameObject.Find("HUD/subTurn").GetComponent.<Text>().text="Turn: "+subTurn;
         //Material update (this should not be in update?)
         var objects = GameObject.FindGameObjectsWithTag("colored_parts");
@@ -142,9 +145,7 @@ public class playerManager extends MonoBehaviour{
     }
 
     function onAttackButton(){
-        if(GameObject.Find("playerManager").GetComponent(playerManager).selector instanceof rocketLauncherMech){
-            GameObject.Find("playerManager").GetComponent(playerManager).selector.inputMode="attack";
-        }
+        GameObject.Find("playerManager").GetComponent(playerManager).selector.inputMode="attack";
     }
 
     //MOVE TO SELECTOR

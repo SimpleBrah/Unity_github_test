@@ -139,7 +139,7 @@ GameObject:
   - 65: {fileID: 65000013650314114}
   m_Layer: 0
   m_Name: hq
-  m_TagString: Untagged
+  m_TagString: unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -432,18 +432,18 @@ MonoBehaviour:
   ownerID: 0
   ID: 0
   hp: 0
-  buildingMode: 0
+  tookAction: 0
+  cooldown: 0
+  inputMode: 
   workerPrefab: {fileID: 114000012962310194, guid: b047c12307bbbed4c90dbbe754e8dc42,
     type: 2}
   rocketLauncherPrefab: {fileID: 114000010404510058, guid: 80515452ddc8a4141bcb9c7cd02f424d,
     type: 2}
   playerManagerScript: {fileID: 0}
   mapManagerScript: {fileID: 0}
-  mode: 
-  buildingPhase: 0
-  cooldown: 0
   hpSlider: {fileID: 1000012287027128}
   cdSlider: {fileID: 1000013477536450}
+  mode: 
 --- !u!114 &114000010805253134
 MonoBehaviour:
   m_ObjectHideFlags: 1

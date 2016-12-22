@@ -91,7 +91,7 @@ GameObject:
   - 65: {fileID: 65000011259013672}
   m_Layer: 0
   m_Name: worker
-  m_TagString: Untagged
+  m_TagString: unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -568,10 +568,9 @@ MonoBehaviour:
   ownerID: 0
   ID: 0
   hp: 0
-  buildingMode: 0
   tookAction: 0
-  mode: 
   cooldown: 0
+  inputMode: 
   playerManagerScript: {fileID: 0}
   mapManagerScript: {fileID: 0}
   hqPrefab: {fileID: 114000010643976260, guid: 10a4b1594193bc04592bb08481a35dd3, type: 2}

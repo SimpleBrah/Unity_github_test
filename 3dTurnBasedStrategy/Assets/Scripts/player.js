@@ -11,6 +11,7 @@ public class player extends MonoBehaviour{
     public var unitList : List.<unit> = new List.<unit>();
     //resource fields
     public var resources : int;
+    public var energy : int;
     //id field
     public var ID : int;    //IN LISTS THIS IS -1
     
@@ -35,6 +36,18 @@ public class player extends MonoBehaviour{
     }
 
     function Update () {
+        //calculate energy
+        var currentEnergy : int = 20;
+        for(u in unitList){
+            if(u instanceof hq){
+                currentEnergy+=30;
+            }else if(u instanceof worker){
+                currentEnergy-=10;
+            }else if(u instanceof rocketLauncherMech){
+                currentEnergy-=15;
+            }
+        }
+        energy=currentEnergy;
         //if its my turn check for events
         if(playerManagerScript.subTurn==ID){
             if(Input.GetKeyDown(KeyCode.Tab) && unitList.Count>1){
@@ -80,7 +93,10 @@ public class player extends MonoBehaviour{
                     }
                     playerManagerScript.selector.moveOrAttack(playerManagerScript.selector.transform.position+inputVector());
                 }else if(Input.GetMouseButtonDown(0)){
-                  
+                    var aTarget : GameObject = GameObject.Find("mouseManager").GetComponent(mouseManager).getRayCastHit();
+                    if(aTarget.tag=="unit"){
+                        playerManagerScript.selector.moveOrAttack(aTarget.transform.position);
+                    }
                 }
             }
         }

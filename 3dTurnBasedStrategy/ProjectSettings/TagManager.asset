@@ -13,6 +13,7 @@ TagManager:
   - resource_power_up
   - rocket_league_power_up
   - rocket_launcher_power_up
+  - unit
   layers:
   - Default
   - TransparentFX

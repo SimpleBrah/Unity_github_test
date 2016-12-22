@@ -2,6 +2,8 @@
 
 public class rocketLauncherMech extends unit{
 
+    public var hpSlider : GameObject;
+
     function Start () {
 
     }
@@ -22,6 +24,7 @@ public class rocketLauncherMech extends unit{
                 }            
             }
         }
+        hpSlider.GetComponent(Slider).value=hp;
     }
 
     public function attack(target : unit){

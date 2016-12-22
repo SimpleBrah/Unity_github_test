@@ -26,7 +26,7 @@ public class mouseManager extends MonoBehaviour{
                             GameObject.Find("playerManager").GetComponent(playerManager).selector.attack(hitObject.GetComponent(worker) as unit);
                             Debug.Log("attack called");
                         }else{
-                            GameObject.Find("helpMessage").GetComponent.<Text>().text=hitObject.name;
+                            GameObject.Find("helpMessage").GetComponent.<Text>().text=hitObject.name+" hp:"+hitObject.GetComponent(worker).hp;
                             GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
                         }
                     }
@@ -38,7 +38,7 @@ public class mouseManager extends MonoBehaviour{
                             GameObject.Find("playerManager").GetComponent(playerManager).selector.attack(hitObject.GetComponent(hq) as unit);
                             Debug.Log("attack called");
                         }else{
-                            GameObject.Find("helpMessage").GetComponent.<Text>().text=hitObject.name;
+                            GameObject.Find("helpMessage").GetComponent.<Text>().text=hitObject.name+" hp:"+hitObject.GetComponent(hq).hp+" cd:"+hitObject.GetComponent(hq).cooldown;
                             GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
                         }
                     }
@@ -50,7 +50,7 @@ public class mouseManager extends MonoBehaviour{
                             GameObject.Find("playerManager").GetComponent(playerManager).selector.attack(hitObject.GetComponent(rocketLauncherMech) as unit);
                             Debug.Log("attack called");
                         }else{
-                            GameObject.Find("helpMessage").GetComponent.<Text>().text=hitObject.name;
+                            GameObject.Find("helpMessage").GetComponent.<Text>().text=hitObject.name+" hp:"+hitObject.GetComponent(rocketLauncherMech).hp;
                             GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
                         }
                     }
@@ -78,6 +78,8 @@ public class mouseManager extends MonoBehaviour{
         if(Physics.Raycast(ray, hitInfo)){
             if(hitInfo.transform.gameObject.tag=="floor"){
                 return hitInfo.transform.gameObject;
+            }else if(hitInfo.transform.root.gameObject.tag=="unit"){
+                return hitInfo.transform.root.gameObject;
             }else{
                 return null;
             }
