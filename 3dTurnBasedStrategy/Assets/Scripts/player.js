@@ -50,8 +50,14 @@ public class player extends MonoBehaviour{
         energy=currentEnergy;
         //if its my turn check for events
         if(playerManagerScript.subTurn==ID){
-            if(Input.GetKeyDown(KeyCode.Tab) && unitList.Count>1){
+            if(Input.GetButtonDown("Next") && unitList.Count>1){
                 playerManagerScript.selectorNext();
+            }
+            else if(Input.GetKeyDown(KeyCode.KeypadPlus)){
+                GameObject.Find("Main Camera").transform.position.y-=1;
+            }
+            else if(Input.GetKeyDown(KeyCode.KeypadMinus)){
+                GameObject.Find("Main Camera").transform.position.y+=1;
             }
             else if(Input.GetKeyDown(KeyCode.M)){
                 playerManagerScript.selector.inputMode="move";
@@ -62,12 +68,17 @@ public class player extends MonoBehaviour{
             else if(Input.GetKeyDown(KeyCode.A)){
                 playerManagerScript.selector.inputMode="attack";
             }
+            else if(Input.GetKey(KeyCode.LeftControl)){
+                if(inputVector()!=Vector3(0,0,0)){
+                    GameObject.Find("Main Camera").transform.position+=inputVector();
+                }
+            }
             else if(playerManagerScript.selector.inputMode=="move" && playerManagerScript.selector.tookAction==false){
                 if(inputVector()!=Vector3(0,0,0)){
                     playerManagerScript.selector.moveOrAttack(playerManagerScript.selector.transform.position+inputVector());
-                }else if(Input.GetMouseButtonDown(0)){
+                }else if(Input.GetMouseButtonDown(1)){
                     var mTarget : GameObject = GameObject.Find("mouseManager").GetComponent(mouseManager).getRayCastHit();
-                    if(mTarget!=null && Vector3.Distance(mTarget.transform.position,playerManagerScript.selector.transform.position+Vector3(0,-1,0))==1){
+                    if(mTarget.tag=="floor" && Vector3.Distance(mTarget.transform.position,playerManagerScript.selector.transform.position+Vector3(0,-1,0))==1){
                         playerManagerScript.selector.moveOrAttack(mTarget.transform.position+Vector3(0,1,0));
                     }
                 }
@@ -77,7 +88,7 @@ public class player extends MonoBehaviour{
                     playerManagerScript.selector.build(playerManagerScript.selector.transform.position+inputVector());
                 }else if(Input.GetMouseButtonDown(0)){
                     var bTarget : GameObject = GameObject.Find("mouseManager").GetComponent(mouseManager).getRayCastHit();
-                    if(bTarget!=null && Vector3.Distance(bTarget.transform.position,playerManagerScript.selector.transform.position+Vector3(0,-1,0))==1){
+                    if(bTarget.tag=="floor" && Vector3.Distance(bTarget.transform.position,playerManagerScript.selector.transform.position+Vector3(0,-1,0))==1){
                         playerManagerScript.selector.build(bTarget.transform.position+Vector3(0,1,0));
                     }
                 }
@@ -92,9 +103,9 @@ public class player extends MonoBehaviour{
                         }
                     }
                     playerManagerScript.selector.moveOrAttack(playerManagerScript.selector.transform.position+inputVector());
-                }else if(Input.GetMouseButtonDown(0)){
+                }else if(Input.GetMouseButtonDown(1)){
                     var aTarget : GameObject = GameObject.Find("mouseManager").GetComponent(mouseManager).getRayCastHit();
-                    if(aTarget.tag=="unit"){
+                    if(aTarget.tag=="unit" && Vector3.Distance(aTarget.transform.position,playerManagerScript.selector.transform.position)==1){
                         playerManagerScript.selector.moveOrAttack(aTarget.transform.position);
                     }
                 }
@@ -103,7 +114,12 @@ public class player extends MonoBehaviour{
     }
 
     public function inputVector(){
-        if(Input.GetKeyDown(KeyCode.UpArrow)){
+        if(Input.GetButton("Vertical")){
+            return Vector3(0,0,Input.GetAxisRaw("Vertical"));
+        }else if(Input.GetButton("Horizontal")){
+            return Vector3(Input.GetAxisRaw("Horizontal"),0,0);
+        }
+        /*if(Input.GetKeyDown(KeyCode.UpArrow)){
             return Vector3(0,0,1);
         }
         else if(Input.GetKeyDown(KeyCode.DownArrow)){
@@ -116,7 +132,7 @@ public class player extends MonoBehaviour{
             return Vector3(1,0,0);
         }else{
             return Vector3(0,0,0);
-        }
+        }*/
     }
     
     public function renewIDs(){

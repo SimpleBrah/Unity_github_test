@@ -71,26 +71,46 @@ public class hq extends unit{
         }
     
         if(targetValid==true){
-            if(mode=="worker" && playerManagerScript.playerList[ownerID-1].resources>=50 && playerManagerScript.playerList[ownerID-1].energy>=10){
-                playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(workerPrefab,target,workerPrefab.transform.rotation));
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].inputMode="move";
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].tookAction=false;
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].hp=100;
-                inputMode="move";
-                cooldown=5;
-                playerManagerScript.playerList[ownerID-1].resources-=50;
-            }else if(mode=="rocketLauncher" && playerManagerScript.playerList[ownerID-1].resources>=100 && playerManagerScript.playerList[ownerID-1].energy>=15){
-                playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(rocketLauncherPrefab,target,rocketLauncherPrefab.transform.rotation));
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].inputMode="move";
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].tookAction=false;
-                playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].hp=100;
-                inputMode="move";
-                cooldown=5;
-                playerManagerScript.playerList[ownerID-1].resources-=100;
+            if(mode=="worker"){
+                if(playerManagerScript.playerList[ownerID-1].resources>=50){
+                    if(playerManagerScript.playerList[ownerID-1].energy>=10){
+                        playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(workerPrefab,target,workerPrefab.transform.rotation));
+                        playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
+                        playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
+                        playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].inputMode="move";
+                        playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].tookAction=false;
+                        playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].hp=100;
+                        inputMode="move";
+                        cooldown=5;
+                        playerManagerScript.playerList[ownerID-1].resources-=50;
+                    }else{
+                        GameObject.Find("helpMessage").GetComponent.<Text>().text="You need 10 energy to train a worker";
+                        playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
+                    }
+                }else{
+                    GameObject.Find("helpMessage").GetComponent.<Text>().text="You need 50 resources to train a worker";
+                    playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
+                }
+            }else if(mode=="rocketLauncher"){
+                if(playerManagerScript.playerList[ownerID-1].resources>=100){
+                    if(playerManagerScript.playerList[ownerID-1].energy>=15){
+                        playerManagerScript.playerList[ownerID-1].unitList.Add(Instantiate(rocketLauncherPrefab,target,rocketLauncherPrefab.transform.rotation));
+                        playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ownerID=ownerID;
+                        playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].ID=playerManagerScript.playerList[ownerID-1].unitList.Count-1;
+                        playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].inputMode="move";
+                        playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].tookAction=false;
+                        playerManagerScript.playerList[ownerID-1].unitList[playerManagerScript.playerList[ownerID-1].unitList.Count-1].hp=100;
+                        inputMode="move";
+                        cooldown=5;
+                        playerManagerScript.playerList[ownerID-1].resources-=100;
+                    }else{
+                        GameObject.Find("helpMessage").GetComponent.<Text>().text="You need 15 energy to train a rocket launcher mech";
+                        playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
+                    }
+                }else{
+                    GameObject.Find("helpMessage").GetComponent.<Text>().text="You need 100 resources to train a rocket launcher mech";
+                    playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
+                }
             }
         }
         //add it to the buildingList of owner player unitsList
