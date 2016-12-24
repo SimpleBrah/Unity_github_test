@@ -64,6 +64,7 @@ public class rocketLauncherMech extends unit{
                     }
                         //check for collision
                     else if(unit.transform.position==transform.position){
+                        move=false;
                         //move back
                         //transform.position-=direction;
                         //if enemy attack
@@ -72,6 +73,11 @@ public class rocketLauncherMech extends unit{
                             unit.takeDamage();
                         }
                     }
+                }
+            }
+            for(w in GameObject.FindGameObjectsWithTag("wire_fence")){
+                if(w.GetComponent(fence).inCollision(target)){
+                    move=false;
                 }
             }
 
@@ -88,8 +94,8 @@ public class rocketLauncherMech extends unit{
             }*/
             if(move){
                 transform.position=target;
+                tookAction=true;
             } 
-            tookAction=true;
 
         }
 

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/8x8MapFlat.unity
+- path: Assets/16x16MapFlat.unity
   isLoaded: 1
   isActive: 1

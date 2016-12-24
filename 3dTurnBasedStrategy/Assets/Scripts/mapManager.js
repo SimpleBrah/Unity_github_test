@@ -23,6 +23,7 @@ public class mapManager extends MonoBehaviour{
     }
 
     public function onFloor(unit : Vector3){
+        Debug.Log("onfloor called");
         var result = false;
         //check if target is on floor tile
         for(floor in GameObject.FindGameObjectsWithTag("floor")){

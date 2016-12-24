@@ -41,6 +41,14 @@ public class unit extends MonoBehaviour{
         GameObject.Find("helpMessage").GetComponent.<Text>().text="Hit for "+dmg;
         GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
     }
+    function healDamage(){
+        var heal = Random.Range(10,25);
+        if(this.hp<100){
+            this.hp+=heal;
+        }
+        GameObject.Find("helpMessage").GetComponent.<Text>().text="Heal for "+heal;
+        GameObject.Find("playerManager").GetComponent(playerManager).helpMessageStartTime=Time.realtimeSinceStartup;
+    }
     function inLineOfSight(u : unit){
         //var ray = new Ray (transform.position, u.transform.position);
         //Debug.Log("ray: this "+transform.position+"unit "+u.transform.position);

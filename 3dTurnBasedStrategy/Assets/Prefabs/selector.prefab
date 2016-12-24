@@ -37,7 +37,7 @@ GameObject:
   - 4: {fileID: 4000013099224994}
   - 95: {fileID: 95000010520658290}
   m_Layer: 0
-  m_Name: selector
+  m_Name: selectorModel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -238,3 +238,4 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   playerManagerScript: {fileID: 0}
+  selectedUnit: {fileID: 0}

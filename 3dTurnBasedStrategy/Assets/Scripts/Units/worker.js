@@ -55,9 +55,11 @@ public class worker extends unit{
         //if not on floor go back
         if(Vector3.Distance(transform.position,target)==1 && mapManagerScript.onFloor(target)==false){
             //transform.position-=direction;
+            Debug.Log("cant move there");
             GameObject.Find("helpMessage").GetComponent.<Text>().text="Cant move there";
             playerManagerScript.helpMessageStartTime=Time.realtimeSinceStartup;
         }else{
+            Debug.Log("distance on floor");
         
         //for every player
         for(p in playerManagerScript.playerList){
@@ -74,8 +76,16 @@ public class worker extends unit{
                     if(p.ID!=ownerID){
                         move=false;
                         unit.takeDamage();
+                    }else{
+                        move=false;
+                        unit.healDamage();
                     }
                 }
+            }
+        }
+        for(w in GameObject.FindGameObjectsWithTag("wire_fence")){
+            if(w.GetComponent(fence).inCollision(target)){
+                move=false;
             }
         }
 
@@ -92,8 +102,9 @@ public class worker extends unit{
         }*/
         if(move){
             transform.position=target;
+            tookAction=true;
         } 
-        tookAction=true;
+        
 
         }
 

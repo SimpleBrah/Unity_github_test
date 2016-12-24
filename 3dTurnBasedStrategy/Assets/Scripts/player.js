@@ -78,8 +78,18 @@ public class player extends MonoBehaviour{
                     playerManagerScript.selector.moveOrAttack(playerManagerScript.selector.transform.position+inputVector());
                 }else if(Input.GetMouseButtonDown(1)){
                     var mTarget : GameObject = GameObject.Find("mouseManager").GetComponent(mouseManager).getRayCastHit();
-                    if(mTarget.tag=="floor" && Vector3.Distance(mTarget.transform.position,playerManagerScript.selector.transform.position+Vector3(0,-1,0))==1){
-                        playerManagerScript.selector.moveOrAttack(mTarget.transform.position+Vector3(0,1,0));
+                    if(mTarget.tag=="floor"){
+                        Debug.Log("clicked on floor");
+                        var temp : Vector3=playerManagerScript.selector.transform.position+Vector3(0,-1,0);
+                        if(parseInt(Vector3.Distance(mTarget.transform.position,temp))==1){
+                            Debug.Log("distance from "+mTarget.transform.position+" to "+temp+" is 1 when actualy it is"+Vector3.Distance(mTarget.transform.position,temp));
+                            playerManagerScript.selector.moveOrAttack(mTarget.transform.position+Vector3(0,1,0));
+                        }else{
+                            Debug.Log("distance from "+mTarget.transform.position+" to "+temp+" is not 1 when actualy it is"+Vector3.Distance(mTarget.transform.position,temp));
+                        }
+                    }else{
+                        Debug.Log("didnt click on floor");
+                        //Debug.Log("target is a "+mTarget.tag+" and distance from "+mTarget.transform.position+" to "+playerManagerScript.selector.transform.position+Vector3(0,-1,0)+" is "+Vector3.Distance(mTarget.transform.position,playerManagerScript.selector.transform.position+Vector3(0,-1,0)));
                     }
                 }
             }
@@ -118,6 +128,8 @@ public class player extends MonoBehaviour{
             return Vector3(0,0,Input.GetAxisRaw("Vertical"));
         }else if(Input.GetButton("Horizontal")){
             return Vector3(Input.GetAxisRaw("Horizontal"),0,0);
+        }else{
+            return Vector3(0,0,0);
         }
         /*if(Input.GetKeyDown(KeyCode.UpArrow)){
             return Vector3(0,0,1);
